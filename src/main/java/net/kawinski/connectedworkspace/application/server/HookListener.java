@@ -1,13 +1,11 @@
-package net.kawinski.connectedworkspace;
+package net.kawinski.connectedworkspace.application.server;
 
 import lombok.extern.slf4j.Slf4j;
+import net.kawinski.connectedworkspace.application.server.Server;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Slf4j
 public class HookListener implements NativeMouseInputListener {

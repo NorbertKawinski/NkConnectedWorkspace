@@ -1,6 +1,7 @@
-package net.kawinski.connectedworkspace.configuration;
+package net.kawinski.connectedworkspace.application.client;
 
 import lombok.Getter;
+import net.kawinski.connectedworkspace.application.Config;
 
 import java.io.IOException;
 

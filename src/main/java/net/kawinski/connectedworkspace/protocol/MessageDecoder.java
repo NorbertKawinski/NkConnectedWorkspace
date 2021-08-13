@@ -1,4 +1,4 @@
-package net.kawinski.connectedworkspace.nettyexamples;
+package net.kawinski.connectedworkspace.protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

@@ -4,28 +4,19 @@
 package net.kawinski.connectedworkspace;
 
 import lombok.extern.slf4j.Slf4j;
-import net.kawinski.connectedworkspace.configuration.ClientConfig;
-import net.kawinski.connectedworkspace.configuration.Config;
-import net.kawinski.connectedworkspace.configuration.ServerConfig;
-import org.jnativehook.NativeHookException;
-
-import java.awt.*;
+import net.kawinski.connectedworkspace.application.client.Client;
+import net.kawinski.connectedworkspace.application.server.Server;
+import net.kawinski.connectedworkspace.application.client.ClientConfig;
+import net.kawinski.connectedworkspace.application.Config;
+import net.kawinski.connectedworkspace.application.server.ServerConfig;
 import java.io.IOException;
-import java.util.Random;
 
 @Slf4j
 public class Main {
 
+    // TODO: Clipboard https://stackoverflow.com/questions/7105778/get-readable-text-only-from-clipboard
     public static void main(String[] args) throws Exception {
         log.info("Hello world!");
-
-//        Robot robot = new Robot();
-//        Random random = new Random();
-//        while(random.hashCode() != 0) {
-//            robot.mouseMove(random.nextInt(1000), random.nextInt(500));
-//            Thread.sleep(5000);
-//        }
-
 
         Config config = new Config();
         String appMode = config.getApplicationMode();
@@ -53,7 +44,7 @@ public class Main {
                 log.error("Critical server error", ex);
             }
         }).start();
-        Thread.sleep(500);
+        Thread.sleep(250);
         new Thread(() -> {
             try {
                 Thread.currentThread().setName("Client");
