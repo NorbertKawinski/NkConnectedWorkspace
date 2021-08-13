@@ -8,15 +8,22 @@ import net.kawinski.connectedworkspace.protocol.Message;
 @Slf4j
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
+    private final MessageExecutor messageExecutor;
+
+    public ClientHandler(MessageExecutor messageExecutor) {
+        this.messageExecutor = messageExecutor;
+    }
+
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("Lost connection to the server");
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        Message m = (Message) msg;
-        log.info(m.toString());
+    public void channelRead(ChannelHandlerContext ctx, Object msgObj) {
+        Message msg = (Message) msgObj;
+        log.info(msg.toString());
+        messageExecutor.execute(msg);
     }
 
     @Override

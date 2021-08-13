@@ -5,19 +5,25 @@ package net.kawinski.connectedworkspace.application.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
+import net.kawinski.connectedworkspace.protocol.Message;
 import net.kawinski.connectedworkspace.protocol.MessageEncoder;
 
 @Slf4j
 public class Server {
 
     private final ServerConfig config;
+    private static final ChannelGroup allClients = new DefaultChannelGroup("allClients", GlobalEventExecutor.INSTANCE);
 
     public Server(ServerConfig config) {
         this.config = config;
@@ -36,7 +42,13 @@ public class Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
+                            allClients.add(ch);
                             ch.pipeline().addLast(new MessageEncoder(), new ServerHandler());
+                        }
+
+                        @Override
+                        public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+                            allClients.remove(ctx.channel());
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
@@ -44,7 +56,8 @@ public class Server {
 
             log.info("Server binding port " + port);
             ChannelFuture f = b.bind(port).sync();
-            log.info("Server ready for connections");
+            f.sync(); // TODO: Is this line really needed? Above is another .sync() called
+            log.info("Server is ready for connections");
 
             // In this example, this does not happen, but you can do that to gracefully shut down your server.
             log.info("Server started; Waiting for the socket to close");
@@ -53,6 +66,10 @@ public class Server {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+    }
+
+    public void send(Message message) {
+        allClients.writeAndFlush(message);
     }
 
 }

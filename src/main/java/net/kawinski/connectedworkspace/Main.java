@@ -5,6 +5,8 @@ package net.kawinski.connectedworkspace;
 
 import lombok.extern.slf4j.Slf4j;
 import net.kawinski.connectedworkspace.application.client.Client;
+import net.kawinski.connectedworkspace.application.client.MessageExecutor;
+import net.kawinski.connectedworkspace.application.server.HookListener;
 import net.kawinski.connectedworkspace.application.server.Server;
 import net.kawinski.connectedworkspace.application.client.ClientConfig;
 import net.kawinski.connectedworkspace.application.Config;
@@ -57,15 +59,16 @@ public class Main {
 
     private static void startAsClient(Config config) throws Exception {
         ClientConfig clientConfig = new ClientConfig(config);
-        new Client(clientConfig).run();
+        MessageExecutor messageExecutor = new MessageExecutor();
+        new Client(clientConfig, messageExecutor).run();
     }
 
     private static void startAsServer(Config config) throws Exception {
         ServerConfig serverConfig = new ServerConfig(config);
         Server server = new Server(serverConfig);
 
-//        HookListener hookListener = new HookListener(server);
-//        hookListener.registerHooks();
+        HookListener hookListener = new HookListener(server);
+        hookListener.registerHooks();
 
         server.run();
     }

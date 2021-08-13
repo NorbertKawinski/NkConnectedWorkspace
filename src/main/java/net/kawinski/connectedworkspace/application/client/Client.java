@@ -18,9 +18,11 @@ import net.kawinski.connectedworkspace.protocol.MessageDecoder;
 public class Client {
 
     private final ClientConfig config;
+    private final MessageExecutor messageExecutor;
 
-    public Client(ClientConfig config) {
+    public Client(ClientConfig config, MessageExecutor messageExecutor) {
         this.config = config;
+        this.messageExecutor = messageExecutor;
     }
 
     public void run() throws Exception {
@@ -37,7 +39,7 @@ public class Client {
             b.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new MessageDecoder(), new ClientHandler());
+                    ch.pipeline().addLast(new MessageDecoder(), new ClientHandler(messageExecutor));
                 }
             });
 
