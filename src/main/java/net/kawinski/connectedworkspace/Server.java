@@ -5,23 +5,7 @@ package net.kawinski.connectedworkspace;
 
 import lombok.extern.slf4j.Slf4j;
 import net.kawinski.connectedworkspace.configuration.ServerConfig;
-import net.kawinski.connectedworkspace.nettyexamples.DiscardServer;
 import net.kawinski.connectedworkspace.nettyexamples.TimeServer;
-import net.kawinski.connectedworkspace.utils.Utils;
-import org.jnativehook.GlobalScreen;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Slf4j
 public class Server {

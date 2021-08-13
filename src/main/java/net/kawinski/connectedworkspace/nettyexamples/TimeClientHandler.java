@@ -4,11 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Date;
+import net.kawinski.connectedworkspace.protocol.Message;
 
 @Slf4j
-
 public class TimeClientHandler extends ChannelInboundHandlerAdapter {
     private ByteBuf buf;
 
@@ -25,8 +23,8 @@ public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        UnixTime m = (UnixTime) msg;
-        System.out.println(m);
+        Message m = (Message) msg;
+        log.info(m.toString());
         ctx.close();
     }
 
