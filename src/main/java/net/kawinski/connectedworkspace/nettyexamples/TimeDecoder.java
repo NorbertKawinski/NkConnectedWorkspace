@@ -8,11 +8,11 @@ import java.util.List;
 
 public class TimeDecoder extends ByteToMessageDecoder { // (1)
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) { // (2)
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         if (in.readableBytes() < 4) {
-            return; // (3)
+            return;
         }
-        
-        out.add(in.readBytes(4)); // (4)
+
+        out.add(new UnixTime(in.readUnsignedInt()));
     }
 }
