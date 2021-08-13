@@ -7,4 +7,10 @@
     <root level="all">
         <appender-ref ref="CONSOLE"/>
     </root>
+    <logger name="io.netty" level="warn" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="org.jnativehook" level="warn" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
 </configuration>

@@ -9,13 +9,23 @@ import net.kawinski.connectedworkspace.configuration.Config;
 import net.kawinski.connectedworkspace.configuration.ServerConfig;
 import org.jnativehook.NativeHookException;
 
+import java.awt.*;
 import java.io.IOException;
+import java.util.Random;
 
 @Slf4j
 public class Main {
 
     public static void main(String[] args) throws Exception {
         log.info("Hello world!");
+
+//        Robot robot = new Robot();
+//        Random random = new Random();
+//        while(random.hashCode() != 0) {
+//            robot.mouseMove(random.nextInt(1000), random.nextInt(500));
+//            Thread.sleep(5000);
+//        }
+
 
         Config config = new Config();
         String appMode = config.getApplicationMode();
@@ -54,17 +64,17 @@ public class Main {
         }).start();
     }
 
-    private static void startAsClient(Config config) throws IOException {
+    private static void startAsClient(Config config) throws Exception {
         ClientConfig clientConfig = new ClientConfig(config);
         new Client(clientConfig).run();
     }
 
-    private static void startAsServer(Config config) throws IOException, NativeHookException {
+    private static void startAsServer(Config config) throws Exception {
         ServerConfig serverConfig = new ServerConfig(config);
         Server server = new Server(serverConfig);
 
-        HookListener hookListener = new HookListener(server);
-        hookListener.registerHooks();
+//        HookListener hookListener = new HookListener(server);
+//        hookListener.registerHooks();
 
         server.run();
     }

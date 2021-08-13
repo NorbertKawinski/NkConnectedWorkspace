@@ -5,6 +5,7 @@ package net.kawinski.connectedworkspace;
 
 import lombok.extern.slf4j.Slf4j;
 import net.kawinski.connectedworkspace.configuration.ClientConfig;
+import net.kawinski.connectedworkspace.nettyexamples.TimeClient;
 import net.kawinski.connectedworkspace.utils.Utils;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 @Slf4j
 public class Client {
@@ -22,17 +24,26 @@ public class Client {
         this.config = config;
     }
 
-    public void run() throws IOException {
+    public void run() throws Exception {
         log.info("Connecting to server");
-        SocketChannel connection = SocketChannel.open(new InetSocketAddress("localhost", config.getServerPort()));
-        ByteBuffer buffer = ByteBuffer.allocate(256);
-        log.info("Connected to server");
 
-        while(true) {
-            String message = Utils.read(connection, buffer);
-            log.info("Received message from server: " + message);
-            onMessage(message);
-        }
+        TimeClient.main(new String[] {"localhost", "" + config.getServerPort()});
+
+//        SocketChannel connection = SocketChannel.open(new InetSocketAddress("localhost", config.getServerPort()));
+//        ByteBuffer buffer = ByteBuffer.allocate(256);
+//        log.info("Connected to server");
+//
+//        while(true) {
+//            Thread.sleep(1000);
+//            String msg = "" + new Random().nextInt();
+//            connection.write(ByteBuffer.wrap(msg.getBytes(StandardCharsets.UTF_8)));
+//        }
+
+//        while(true) {
+//            String message = Utils.read(connection, buffer);
+//            log.info("Received message from server: " + message);
+//            onMessage(message);
+//        }
     }
 
     public void onMessage(String message) {

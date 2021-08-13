@@ -5,7 +5,10 @@ package net.kawinski.connectedworkspace;
 
 import lombok.extern.slf4j.Slf4j;
 import net.kawinski.connectedworkspace.configuration.ServerConfig;
+import net.kawinski.connectedworkspace.nettyexamples.DiscardServer;
+import net.kawinski.connectedworkspace.nettyexamples.TimeServer;
 import net.kawinski.connectedworkspace.utils.Utils;
+import org.jnativehook.GlobalScreen;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -17,6 +20,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Slf4j
 public class Server {
@@ -30,58 +35,64 @@ public class Server {
 // TODO: Clipboard https://stackoverflow.com/questions/7105778/get-readable-text-only-from-clipboard
 // TODO: Quick test for laptop: Send "right mouse click" every one second
 
-    private static final String POISON_PILL = "POISON_PILL";
-
-    public void run() throws IOException {
-        Selector selector = Selector.open();
-        ServerSocketChannel serverSocket = ServerSocketChannel.open();
-        serverSocket.bind(new InetSocketAddress(/*"localhost", */config.getServerPort()));
-        serverSocket.configureBlocking(false);
-        serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-        ByteBuffer buffer = ByteBuffer.allocate(256);
-
-        while (true) {
-            selector.select();
-            Set<SelectionKey> selectedKeys = selector.selectedKeys();
-            Iterator<SelectionKey> iter = selectedKeys.iterator();
-            while (iter.hasNext()) {
-                SelectionKey key = iter.next();
-
-                if (key.isAcceptable()) {
-                    register(selector, serverSocket);
-                }
-
-                if (key.isReadable()) {
-                    onMessageReady(buffer, key);
-                }
-                iter.remove();
-            }
-        }
+    public void run() throws Exception {
+        log.info("Starting server @ port " + config.getServerPort());
+//        new DiscardServer(config.getServerPort()).run();
+        new TimeServer(config.getServerPort()).run();
     }
 
-    private static void register(Selector selector, ServerSocketChannel serverSocket) throws IOException {
-        log.info("Accepting new client");
-        SocketChannel client = serverSocket.accept();
-        client.configureBlocking(false);
-        client.register(selector, SelectionKey.OP_READ);
-    }
-
-    private static void onMessageReady(ByteBuffer buffer, SelectionKey key) throws IOException {
-        SocketChannel client = (SocketChannel) key.channel();
-        String message = Utils.read(client, buffer);
-        log.info("Received message from client: " + message);
-
-        if (message.equals(POISON_PILL)) {
-            client.close();
-            log.info("Closing client connection");
-        } else {
-            Utils.write(client, buffer, new Date().toString());
-        }
-    }
-
-    public void sendMessage() {
-        
-    }
+//    private static final String POISON_PILL = "POISON_PILL";
+//
+//    public void run() throws IOException {
+//        Selector selector = Selector.open();
+//        ServerSocketChannel serverSocket = ServerSocketChannel.open();
+//        serverSocket.bind(new InetSocketAddress(/*"localhost", */config.getServerPort()));
+//        serverSocket.configureBlocking(false);
+//        serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+//        ByteBuffer buffer = ByteBuffer.allocate(256);
+//
+//        while (true) {
+//            selector.select();
+//            Set<SelectionKey> selectedKeys = selector.selectedKeys();
+//            Iterator<SelectionKey> iter = selectedKeys.iterator();
+//            while (iter.hasNext()) {
+//                SelectionKey key = iter.next();
+//
+//                if (key.isAcceptable()) {
+//                    register(selector, serverSocket);
+//                }
+//
+//                if (key.isReadable()) {
+//                    onMessageReady(buffer, key);
+//                }
+//                iter.remove();
+//            }
+//        }
+//    }
+//
+//    private static void register(Selector selector, ServerSocketChannel serverSocket) throws IOException {
+//        log.info("Accepting new client");
+//        SocketChannel client = serverSocket.accept();
+//        client.configureBlocking(false);
+//        client.register(selector, SelectionKey.OP_READ);
+//    }
+//
+//    private static void onMessageReady(ByteBuffer buffer, SelectionKey key) throws IOException {
+//        SocketChannel client = (SocketChannel) key.channel();
+//        String message = Utils.read(client, buffer);
+//        log.info("Received message from client: " + message);
+//
+//        if (message.equals(POISON_PILL)) {
+//            client.close();
+//            log.info("Closing client connection");
+//        } else {
+//            Utils.write(client, buffer, new Date().toString());
+//        }
+//    }
+//
+//    public void sendMessage() {
+//
+//    }
 
 
 
